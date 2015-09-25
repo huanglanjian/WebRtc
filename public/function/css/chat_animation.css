@@ -1,0 +1,78 @@
+/*chatting area*/
+#whiteboard{
+	width:55%;
+	background:#fff;
+	position:fixed;
+	top:70px;
+	/*right:-19%;*/
+	z-index:999;
+}
+#floatchat{
+	width:19%;
+	background:#fff;
+	position:fixed;
+	top:70px;
+	right:-19%;
+	z-index:9;
+}
+#rightArrow{
+	width:45px;
+	height:45px;
+	background:url(/resource/Pics/online_arrow.jpg) no-repeat;
+	position:fixed;
+	top:100px;
+	right:0;
+	z-index:99;
+}
+#rightArrow a{
+	display:block;
+	height:45px;
+}
+/*friends and share file*/
+#friend_file{
+	width:22%;
+	background:#fff;
+	position:fixed;
+	top:70px;
+	left:-22%;
+	z-index:9;
+}
+#leftArrow{
+	border: 1px solid;
+	width:45px;
+	height:45px;
+	background:url(/resource/Pics/friends.jpg) no-repeat;
+	position:fixed;
+	top:100px;
+	left:0;
+	z-index:99;
+}
+#leftArrow a{
+	display:block;
+	height:45px;
+}
+
+/*video*/
+#sharevideo{
+
+	width:35%;
+	background:#fff;
+	position:fixed;
+	top:170px;
+	left:-35%;
+	z-index:8;
+}
+#leftvideo{
+	border: 1px solid;
+	width:45px;
+	height:45px;
+	background:url(/resource/Pics/camera.jpg) no-repeat;
+	position:fixed;
+	top:150px;
+	left:0;
+	z-index:99;
+}
+#leftvideo a{
+	display:block;
+	height:45px;
+}

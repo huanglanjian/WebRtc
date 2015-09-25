@@ -1,0 +1,30 @@
+<label ng-model="oneAtATime">
+    好友管理：
+</label>
+<tabset justified="true">
+    <tab heading="好友">
+        <div class="row">
+            <section ng-controller="html5Demo"  style="padding:0 15px; float:none">
+                <accordion  close-others="oneAtATime">
+                    <accordion-group>
+                        <accordion-heading>
+                            {{group.title}}
+                        </accordion-heading>
+                        {{group.content}}
+                    </accordion-group>
+                    <accordion-group  is-open="status.open">
+                        <accordion-heading>
+                            用户好友
+                        </accordion-heading>
+                        <section ng-repeat="item in items">
+                            <li>
+                                <a href="">{{item}}</a>
+                            </li>
+                        </section>
+                    </accordion-group>
+                </accordion>
+            </section>
+        </div>
+    </tab>
+    <tab heading="群组">现在啥也没有</tab>
+</tabset>
