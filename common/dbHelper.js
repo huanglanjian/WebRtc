@@ -165,14 +165,10 @@ function _addFriend (userName, friendsName) {
             console.log("_addFriend err" + err);
             return;
         } else {
-            //var FLAG_Add = true;
             for (var m in doc.friends) {
                 if (doc.friends[m].name === friendsName)
-                    //FLAG_Add = false;
-                    return;
+                    return;         //一旦发现好友中已经有这个人，就退出，
             }
-
-
             var friend = {
                 name: friendsName,
                 state: false,
@@ -189,62 +185,122 @@ function _addFriend (userName, friendsName) {
     });
 };
 
-function _createAddUserRec(subject, object) {
+ /**** 在增加一条好友添加的记录，并写入记录  一些初始状态 如result=2表示是初始状态，并没有进行任何回复****/
+function _handleAddUserRec(subject, object) {
     var addUserModel = _getModel('addUser');
     addUserModel.find(function (err, doc) {
         if (err) {
-            console.log("createAddUser err:" + err);
+            console.log("handleAddUser err:" + err);
             return;
         }
         if( ! doc ) {
             return;
         } else {
             var FLAG_add = false;
+            var FLAG_update = false;
             for( var m in doc) {
                 if (doc[m].subject === subject && doc[m].object === object) {
                     FLAG_add = true;
+                    if(doc[m].result === 0) { //如果这个好友的申请请求 是被object拒绝的，那么就可以更新该条记录的状态为初始状态，表示再次请求添加
+                        FLAG_update = true;
+                    }
                 }
             }
-            if (!FLAG_add) {
-                var newAddUser = new addUserModel({
-                    date: new Date,
-                    subject: subject,
-                    object: object,
-                    result: 2
-                });
-                newAddUser.save(function (err, doc) {
-                    if(err) {
-                        console.log("newAddUser err:" + err);
-                        return;
-                    }
-                    console.log("newAddUser.save:" + doc);
-                });
+            if(FLAG_add && FLAG_update) {
+                _initAddUserRec(subject, object);
+            }
+
+            if (!FLAG_add && !FLAG_update) { //不存在这个好友请求，那么就在数据库创建记录
+                _createAddUserRec(subject, object);
             }
             return;
         }
     });
 };
 
-function _updateAddUserRec(subject, object, result) {
+// 创建add user record
+function _createAddUserRec(subject, object) {
+    var addUserModel = _getModel('addUser');
+    var newAddUser = new addUserModel({
+        date: new Date,
+        subject: subject,
+        object: object,
+        result: 2,
+        refuse: false
+    });
+    newAddUser.save(function (err, doc) {
+        if(err) {
+            console.log("newAddUser err:" + err);
+            return;
+        }
+        console.log("newAddUser.save:" + doc);
+    });
+}
 
+// 初始化AddUserRec为初始状态
+function _initAddUserRec(subject, object) {
     var addUserModel = _getModel('addUser');
     addUserModel.find(function (err, doc) {
         if (err) {
-            console.log("createAddUser err:" + err);
+            console.log("initAddUser err:" + err);
             return;
         }
-        console.log(subject + "  " + object);
         if( ! doc ) {
             return;
         } else {
             for( var m in doc) {
                 if (doc[m].subject === subject && doc[m].object === object) {
-                    doc[m].result = result;
+                    doc[m].date = new Date;
+                    doc[m].result = 2;
+                    doc[m].refuse = false;
                     doc[m].save();
                 }
             }
         }
     });
+}
+
+// 设置AddUserRec refuse 为true， 用来给subject推送object拒绝加为好友的回复
+function _setAddUserRecRefuse(subject, object, refuse) {
+    var addUserModel = _getModel('addUser');
+    addUserModel.find(function (err, doc) {
+        if (err) {
+            console.log("setAddUserRecRefuse err:" + err);
+            return;
+        }
+        if( ! doc ) {
+            return;
+        } else {
+            for( var m in doc) {
+                if (doc[m].subject === subject && doc[m].object === object) {
+                    doc[m].refuse = refuse;
+                    doc[m].save();
+                }
+            }
+        }
+    });
+}
+
+ /************   更新好友添加记录的状态  同意加为好友，还是不同意加为好友*/
+function _updateAddUserRec(subject, object, result) {
+     var addUserModel = _getModel('addUser');
+     addUserModel.find(function (err, doc) {
+         if (err) {
+             console.log("updateAddUserRec err:" + err);
+             return;
+         }
+         console.log(subject + "  " + object);
+         if( ! doc ) {
+             return;
+         } else {
+             for( var m in doc) {
+                 if (doc[m].subject === subject && doc[m].object === object) {
+                     doc[m].result = result;
+                     doc[m].save();
+                 }
+             }
+         }
+     });
 };
 
 /******  返回Schema   ***/
@@ -281,9 +337,12 @@ module.exports = {
         _addFriend(userName, friendName);
     },
     addUserRecord: function (subject, object) {
-        _createAddUserRec(subject, object);
+        _handleAddUserRec(subject, object);
     },
     updateAddUserRec: function (subject, object, result) {
         _updateAddUserRec(subject, object, result);
+    },
+    setRecRefuse: function (subject, object, refuse) {
+        _setAddUserRecRefuse(subject, object, refuse);
     }
 };
