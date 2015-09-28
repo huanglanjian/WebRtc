@@ -1,6 +1,6 @@
 /*chatting area*/
 #whiteboard{
-	width:55%;
+	width:92%;
 	background:#fff;
 	position:fixed;
 	top:70px;
@@ -29,8 +29,11 @@
 	height:45px;
 }
 /*friends and share file*/
+.main_area {
+    margin-left: -38%;
+}
 #friend_file{
-	width:22%;
+	width:21%;
 	background:#fff;
 	position:fixed;
 	top:70px;
@@ -38,7 +41,6 @@
 	z-index:9;
 }
 #leftArrow{
-	border: 1px solid;
 	width:45px;
 	height:45px;
 	background:url(/resource/Pics/friends.jpg) no-repeat;
@@ -54,8 +56,7 @@
 
 /*video*/
 #sharevideo{
-
-	width:35%;
+	width:34%;
 	background:#fff;
 	position:fixed;
 	top:170px;
@@ -63,7 +64,6 @@
 	z-index:8;
 }
 #leftvideo{
-	border: 1px solid;
 	width:45px;
 	height:45px;
 	background:url(/resource/Pics/camera.jpg) no-repeat;
