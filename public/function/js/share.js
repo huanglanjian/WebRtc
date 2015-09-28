@@ -53,6 +53,8 @@ document.getElementById('open').onclick = function() {
         document.getElementById('session-id').focus();
         return;
     }
+    sessionid = globalclientUser + "_" +sessionid;
+    alert(sessionid);
 
     this.disabled = true;
 
