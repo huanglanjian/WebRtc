@@ -1,18 +1,18 @@
 $(function(){
 	var flagfile = 0, flagvideo = 0, flagright = 0;
-	$('#rightArrow').on("click",function(){
+	$('#rightArrow').on("click",function(){//聊天区管理
 		if(flagvideo==0&&flagfile==0){//其余两个未弹出
 			if(flagright==1){
 				$("#floatchat").animate({right: '-19%'},300);
 				$("#whiteboard").animate({width:'92%'},300);
-				$(this).animate({right: '-5px'},300);
+				$(this).animate({right: '-3px'},300);
 				$(this).css('background-position','-50px 0');
 				flagright=0;
 			}else{
 				$("#floatchat").animate({right: '1%',width:'18%'},300);
 				$("#whiteboard").animate({width:'+75%'},300);
-				$(this).animate({right: '0%'},300);
-				$(this).css('background-position','0px 0');
+				$(this).animate({right: '-2%'},300);
+				$(this).css('background-position','-15px 0');
 				flagright=1;
 			}
 		}
@@ -26,8 +26,8 @@ $(function(){
 			}else{
 				$("#floatchat").animate({right: '1%',width:'18%'},300);
 				$("#whiteboard").animate({width:'40%'},300);
-				$(this).animate({right: '0%'},300);
-				$(this).css('background-position','0px 0');
+				$(this).animate({right: '-2%'},300);
+				$(this).css('background-position','-15px 0');
 				flagright=1;
 			}
 		}
@@ -41,13 +41,13 @@ $(function(){
 			}else{
 				$("#floatchat").animate({right: '1%',width:'18%'},300);
 				$("#whiteboard").animate({width:'53%'},300);
-				$(this).animate({right: '0%'},300);
-				$(this).css('background-position','0px 0');
+				$(this).animate({right: '-2%'},300);
+				$(this).css('background-position','-15px 0');
 				flagright=1;
 			}
 		}
 	});
-	$('#leftArrow').on("click",function(){
+	$('#leftArrow').on("click",function(){//好友文件区管理
 		if(flagvideo==0&&flagright==0){//其余两个未弹出
 			if(flagfile==1){
 				$("#friend_file").animate({left: '-22%'},300);
@@ -90,7 +90,7 @@ $(function(){
 			}
 		}
 	});
-	$('#leftvideo').on("click",function(){
+	$('#leftvideo').on("click",function(){//视频区管理
 		if(flagright==0&&flagfile==0){//其余两个未弹出
 			if(flagvideo==1){
 				$("#sharevideo").animate({left: '-34%',height:"0"},300);
