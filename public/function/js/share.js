@@ -54,8 +54,6 @@ document.getElementById('open').onclick = function() {
         return;
     }
     sessionid = globalclientUser + "_" +sessionid;
-    alert(sessionid);
-
     this.disabled = true;
 
     connection.channel = connection.sessionid = connection.userid = sessionid;
@@ -106,7 +104,6 @@ connection.onpartofscreen = function(event) {
 };
 
 var chatContainer = document.querySelector('.chat-output');
-
 document.getElementById('input-text-chat').onkeyup = function(e) {
     console.log(this.value);
     if(e.keyCode != 13) return;
@@ -115,21 +112,37 @@ document.getElementById('input-text-chat').onkeyup = function(e) {
     this.value = this.value.replace(/^\s+|\s+$/g, '');
 
     if (!this.value.length) return;
-
-    connection.send(connection.userid+":"+this.value);
-    appendDIV(connection.userid+":"+this.value);
+    var contentDiv = '<div>' + this.value + '</div>';
+    var usernameDiv = '<span>' + connection.userid + '</span>';
+    var sendinfo = usernameDiv + contentDiv;
+    //connection.send(connection.userid+":"+this.value);
+    //appendDIV(connection.userid+":"+this.value);
+    connection.send(sendinfo);
+    appendUser(sendinfo);
     console.log(connection.userid+":"+this.value);
     this.value =  '';
 };
 
-connection.onmessage = appendDIV;
-
-// a custom method used to append a new DIV into DOM
-function appendDIV(event) {
-    var div = document.createElement('div');
+connection.onmessage = appendGuest;
+function appendUser(event) {
+    var div = document.createElement('section');
+    div.className = 'user';
     div.innerHTML = event.data || event;
     console.log(event.data);
-    chatContainer.insertBefore(div, chatContainer.firstChild);
+    //chatContainer.insertBefore(div, chatContainer.firstChild);
+    chatContainer.appendChild(div);
+    div.tabIndex = 0;
+    div.focus();
+    document.getElementById('input-text-chat').focus();
+}
+// a custom method used to append a new DIV into DOM
+function appendGuest(event) {
+    var div = document.createElement('section');
+    div.className = 'service';
+    div.innerHTML = event.data || event;
+    console.log(event.data);
+    //chatContainer.insertBefore(div, chatContainer.firstChild);
+    chatContainer.appendChild(div);
     div.tabIndex = 0;
     div.focus();
     document.getElementById('input-text-chat').focus();
