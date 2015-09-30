@@ -13,7 +13,7 @@ module.exports = function ( app ) {
                 name: req.body.uname,
                 password: req.body.upwd,
                 state: false
-            })
+            });
         userModel.findOne({name: userInfo.name}, function (error, doc) {
             console.log(doc);
             if (error) {
@@ -27,6 +27,8 @@ module.exports = function ( app ) {
             } else {
                 global.dbHelper.addUser(userInfo);
                 global.dbHelper.createFriendRec(userInfo.name);
+                global.dbHelper.createRoomsRec(userInfo.name);
+
                 //global.dbHelper.addFriends(userInfo.name);
                 setImmediate(function (cb) {
                     userModel.findOne({name: userInfo.name}, function (err, doc) {

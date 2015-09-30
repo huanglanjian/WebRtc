@@ -108,6 +108,8 @@ var _getUnameFromSessionId = function (sessionId) {
     });
 };
 
+/*******************************    好友添加的代码    *************************************************/
+
 /********  createFriend in userFriends Model ****/
 function _createFriendRec (userName) {
     var friendsModel = _getModel('userFriends');
@@ -134,7 +136,7 @@ function _createFriendRec (userName) {
 };
 
 /*********  addFriends to Rec ****/
-function _addFriends (userName) {
+/*function _addFriends (userName) {
     var user = []; //数组用来保存所有的用户名
     var userModel = _getModel('user');
     userModel.find(function(err, doc) {
@@ -153,9 +155,7 @@ function _addFriends (userName) {
             }
         }
     });
-};
-
-
+};*/
 
 /**********  _add Friend ***/
 function _addFriend (userName, friendsName) {
@@ -185,7 +185,7 @@ function _addFriend (userName, friendsName) {
     });
 };
 
- /**** 在增加一条好友添加的记录，并写入记录  一些初始状态 如result=2表示是初始状态，并没有进行任何回复****/
+ /**** 增加一条好友添加的记录，并写入记录  一些初始状态 如result=2表示是初始状态，并没有进行任何回复****/
 function _handleAddUserRec(subject, object) {
     var addUserModel = _getModel('addUser');
     addUserModel.find(function (err, doc) {
@@ -303,7 +303,181 @@ function _updateAddUserRec(subject, object, result) {
      });
 };
 
-/******  返回Schema   ***/
+/************************************   服务器聊天room房间处理   *********************************************/
+function _createRoomsRec(owner) {
+    var roomTablesModel = _getModel('roomTables');
+    roomTablesModel.findOne({ owner: owner }, function (err, doc) {
+        if(err) {
+            console.log("roomModel find err:" + err);
+            return;
+        }
+        if(!doc) {
+            var newRoomRecord = new roomTablesModel({
+                owner: owner,
+                rooms: [],
+                sessions: []
+            });
+            newRoomRecord.save(function (err, doc) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log("create room record" + doc);
+                }
+            });
+        } else return;
+    })
+
+};
+//创建新的房间表
+function _createRoom(owner, channel, sessionId) {
+    var roomTablesModel = _getModel('roomTables');
+    roomTablesModel.findOne({owner: owner}, function (err, doc) {
+        if (err) {
+            console.log("_createRoom err:" + err);
+            return;
+        }
+        if (!doc) {
+            return;
+        } else {
+            for (var m in doc.rooms) {
+                if (doc.rooms[m].sessionId === sessionId) {
+                    console.log("The room " + sessionId + "is exist!");
+                    return;
+                }
+            }
+            console.log("add a room:" + sessionId);
+            var room = {
+                channel: channel,
+                sessionId: sessionId,
+                name: "default"
+            };
+            doc.rooms.push(room);
+            /*模型改变*/
+            doc.markModified('rooms');
+            doc.save(function (err, ret) {
+                if(ret) {
+                    for(var n in ret.rooms) {
+                        if(ret.rooms[n].channel === channel && ret.rooms[n].sessionId === sessionId) {
+                            console.log("typeof _id:" + typeof(ret.rooms[n]._id));
+                            _createRoom_Users(ret.rooms[n]._id); //成功创建房间后，创建对应的用户表
+                        }
+                    }
+                }
+            });
+        }
+    });
+}
+//创建用户表
+function _createRoom_Users(roomId) {
+    var room_usersModel = _getModel('room_users');
+    room_usersModel.findOne({roomId: roomId}, function (err, doc) {
+        if(err) {
+            console.log("_createRoomusers err:" + err);
+            return;
+        } if (!doc) {
+            var newRoom_User = new room_usersModel({
+                roomId: roomId,
+                users: [],
+                rootUser: []
+            });
+            newRoom_User.save(function (err, doc) {
+                if (err) {
+                    console.log("_createRoomUsers err:" + err);
+                } else {
+                    console.log("_createRoomUsers:" + doc);
+                }
+            });
+        }
+    });
+}
+// 添加用户到房间的用户表中
+function _addUserInRoom(owner, channel, sessionId, user, callback) {
+    var room_usersModel = _getModel('room_users');
+    _getRoomId(owner, channel, sessionId, function (roomId) {
+        room_usersModel.findOne({roomId: roomId}, function (err, doc) {
+            if(err) {
+                console.log("room_userMdoel find err:" + err);
+                return;
+            }
+            if(!doc) {
+                console.log("room user table not exist!");
+                return;
+            } else {
+                var newUser = {
+                    user: user
+                };
+                doc.users.push(newUser);
+                doc.markModified('users');
+                doc.save(function (err, doc) {
+                    if(err) {
+                        console.log("save room user err:" + err);
+                        return;
+                    } if(doc) {
+                        callback(err, doc);
+                    }
+                });
+            }
+        })
+    });
+}
+
+function _getRoomId(owner, channel, sessionId, callback) {
+    var roomTablesModel = _getModel('roomTables');
+    roomTablesModel.findOne({owner: owner}, function (err, doc) {
+        if(err) {
+            console.log("_getRoomId err:" + err);
+            return;
+        }
+        if(!doc) {
+            return;
+        } else {
+            for(var m in doc.rooms) {
+                if(doc.rooms[m].channel === channel && doc.rooms[m].sessionId === sessionId) {
+                    callback(doc.rooms[m]._id);
+                }
+            }
+        }
+    });
+    
+}
+
+function _createSession(owner, channel, sessionId, user, callback) {
+    var roomTablesModel = _getModel('roomTables');
+    roomTablesModel.findOne({owner: user}, function (err, doc) {
+        if(err) {
+            console.log("createSession find err:" + err);
+            return;
+        }
+        if(!doc) {
+            return;
+        } else {
+            for(var m in doc.sessions) {
+                if(doc.sessions[m].sessionId === sessionId && doc.sessions[m].channel === channel) {
+                    var msg = "数据库显示，已经在房间中了！";
+                    callback(msg);
+                    return;
+                }
+            }
+            var newSession = {
+                channel: channel,
+                sessionId: sessionId,
+                name: "default",
+                theOwner: owner
+            };
+            doc.sessions.push(newSession);
+            doc.markModified('sessions');
+            doc.save(function (err, doc) {
+                if(err) {
+                    console.log("save new session err:" + err);
+                    return;
+                } else {
+                    callback(err, doc);
+                }
+            });
+        }
+    });
+}
+/************  返回Schema 数据库数据模型  *************/
 var _getModel = function (type) {
     return mongoose.model(type);
 };
@@ -344,5 +518,19 @@ module.exports = {
     },
     setRecRefuse: function (subject, object, refuse) {
         _setAddUserRecRefuse(subject, object, refuse);
+    },
+    createRoomsRec: function (owner) {
+        _createRoomsRec(owner);
+    },
+    createRoom: function(owner, channel, sessionId) {
+        _createRoom(owner, channel, sessionId);
+    },
+    addUserInRoom: function(owner, channel, sessionId, user, callback){
+        _addUserInRoom(owner, channel, sessionId, user, callback);
+    },
+    createSessions: function (owner, channel, sessionId, user, callback) {
+        _createSession(owner, channel, sessionId, user, callback);
     }
+
+
 };

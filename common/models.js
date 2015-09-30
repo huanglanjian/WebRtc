@@ -33,14 +33,36 @@ module.exports = {
                                                                 用来推送给subject客户端， object对于此次请求的拒绝状态*/
     },
 
-    allRoom: {
-        owner: { type: String, required: true },            //房间属主
-        roomSessionId: { type: String, required: true },    //房间sessionId
-        roomName: { type: String, required: false },        //房间名称
-        rooms: [
+    roomTables: {
+        owner: { type: String, required: true },                    //房间信息
+        rooms: [                                                    /******rooms 存储所有owner创建的房间*/
             {
-                user: { type: String, required: true },
-                root: { type: Boolean }          /**  举手等等特权  ***/
+                channel: {type: String, required: true},            //channel
+                sessionId: { type: String, required: true },        //房间sessionId   房间入口地址
+                name: { type: String, required: false },            //房间别名
+            }
+        ],
+        sessions: [                                                  /******sessions 存储加入的别人的房间***/
+            {
+                channel: {type: String, required: true},
+                sessionId: { type: String, required: true },        //房间的sessionId  房间入口地址
+                name: { type: String, required: false },            //房间的别名
+                theOwner: { type: String, required: true }         //房间的创建人
+            }
+        ]
+    },
+
+    room_users: {
+        roomId: { type: String , required: true},
+        users: [                                                    //房间内的邀请加入的所有的用户列表
+            {
+                user: { type: String }
+            }
+        ],
+
+        rootUser: [                                                 //拥有特权的user 比如说 主讲人之类的
+            {
+                user: { type: String }
             }
         ]
     }

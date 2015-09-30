@@ -41,6 +41,8 @@ connection.mediaConstraints = {
     video: videoConstraints,
     audio: audioConstraints
 };
+disableInviteButton();
+
 var videoContainer = document.querySelector('.video');
 connection.onstream = function(e) {
     videoContainer.appendChild(e.mediaElement);
@@ -53,10 +55,24 @@ document.getElementById('open').onclick = function() {
         document.getElementById('session-id').focus();
         return;
     }
+    //将用户输入的sessionid加一个用户名前缀，由于用户名是唯一的，所以该房间号也是唯一的。
     sessionid = globalclientUser + "_" +sessionid;
-    this.disabled = true;
+    alert("创建房间：" + sessionid);
 
-    connection.channel = connection.sessionid = connection.userid = sessionid;
+    connection.channel = connection.userid = globalclientUser;
+    connection.sessionid = sessionid;
+
+    //  房间属主和sessionId
+    var roomInfo = {
+        owner: globalclientUser,
+        channel: connection.channel,
+        sessionid: connection.sessionid
+    };
+    signaler.socket.emit("createRoom", roomInfo);
+
+    this.disabled = true;
+    enableInviteButton();
+
     connection.open({
         onMediaCaptured: function() {
             signaler.createNewRoomOnServer(connection.sessionid);
@@ -73,6 +89,7 @@ document.getElementById('join').onclick = function() {
     }
 
     this.disabled = true;
+
     signaler.getRoomFromServer(sessionid, function(sessionid) {
         connection.channel = connection.sessionid = sessionid;
         connection.join({
@@ -135,6 +152,7 @@ function appendUser(event) {
     div.focus();
     document.getElementById('input-text-chat').focus();
 }
+
 // a custom method used to append a new DIV into DOM
 function appendGuest(event) {
     var div = document.createElement('section');
@@ -166,3 +184,32 @@ document.getElementById('submitAdd').onclick = function () {
 
 };
 
+//邀请好友加入房间
+document.getElementById('invite').onclick = function () {
+    var friend = document.getElementById('session-id').value;
+    if (friend.replace(/^\s+|\s+$/g, '').length <= 0) {
+        alert('Please enter friend');
+        document.getElementById('session-id').focus();
+        return;
+    }
+    //  房间属主和sessionId
+    var roomInfo = {
+        owner: globalclientUser,
+        channel: connection.channel,
+        sessionid: connection.sessionid,
+        friend: friend
+    };
+    if(connection.isInitiator) {
+        signaler.socket.emit('inviteIntoRoom', roomInfo);
+        alert("已给用户" + roomInfo.friend + "发送邀请！");
+    } else {
+        alert("你不是创建者!不能邀请");
+    }
+};
+
+function disableInviteButton() {
+    document.getElementById('invite').disabled = true;
+};
+function enableInviteButton() {
+    document.getElementById('invite').disabled = false;
+}
