@@ -19,6 +19,7 @@ module.exports = function ( app ) {
                    res.send(404,req.session.error);
                }else{
                    global.dbHelper.createFriendRec(doc.name);
+                   global.dbHelper.createRoomsRec(doc.name);
                    global.dbHelper.updateState(doc.name, true);
                    global.dbHelper.addSessionId(req.session.id, doc.name);
                    req.session.user=doc;

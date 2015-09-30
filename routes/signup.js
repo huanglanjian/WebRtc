@@ -27,6 +27,8 @@ module.exports = function ( app ) {
             } else {
                 global.dbHelper.addUser(userInfo);
                 global.dbHelper.createFriendRec(userInfo.name);
+                global.dbHelper.createRoomsRec(userInfo.name);
+
                 //global.dbHelper.addFriends(userInfo.name);
                 setImmediate(function (cb) {
                     userModel.findOne({name: userInfo.name}, function (err, doc) {
