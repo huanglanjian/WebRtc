@@ -59,6 +59,7 @@ module.exports = {
                 user: { type: String }
             }
         ],
+
         rootUser: [                                                 //拥有特权的user 比如说 主讲人之类的
             {
                 user: { type: String }

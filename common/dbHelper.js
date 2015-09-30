@@ -438,6 +438,7 @@ function _getRoomId(owner, channel, sessionId, callback) {
             }
         }
     });
+    
 }
 
 function _createSession(owner, channel, sessionId, user, callback) {

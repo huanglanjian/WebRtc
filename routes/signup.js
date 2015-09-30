@@ -13,7 +13,7 @@ module.exports = function ( app ) {
                 name: req.body.uname,
                 password: req.body.upwd,
                 state: false
-            })
+            });
         userModel.findOne({name: userInfo.name}, function (error, doc) {
             console.log(doc);
             if (error) {
