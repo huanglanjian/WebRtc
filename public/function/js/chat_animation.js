@@ -99,7 +99,7 @@ $(function(){
 				$(this).animate({left: '-5px'},300);
 				flagvideo=0;
 			}else{
-				$("#sharevideo").animate({left: '5%',width:'34%',height:"65%"},300);
+				$("#sharevideo").animate({left: '5%',width:'34%',height:"70%"},300);
 				$(".main_area").animate({"margin-left":"-3%"},300);
 				$("#whiteboard").animate({width:'57%'},300);
 				$(this).animate({left: '0%'},300);
@@ -114,7 +114,7 @@ $(function(){
 				$(this).animate({left: '-5px'},300);
 				flagvideo=0;
 			}else{
-				$("#sharevideo").animate({left: '5%',width:'34%',height:"65%"},300);
+				$("#sharevideo").animate({left: '5%',width:'34%',height:"70%"},300);
 				$(".main_area").animate({"margin-left":"-3%"},300);
 				$("#whiteboard").animate({width:'57%'},300);
 				$(this).animate({left: '0%'},300);
@@ -129,7 +129,7 @@ $(function(){
 				$(this).animate({left: '-5px'},300);
 				flagvideo=0;
 			}else{
-				$("#sharevideo").animate({left: '5%',width:'34%',height:"65%"},300);
+				$("#sharevideo").animate({left: '5%',width:'34%',height:"70%"},300);
 				$(".main_area").animate({"margin-left":"-3%"},300);
 				$("#whiteboard").animate({width:'40%'},300);
 				$(this).animate({left: '0%'},300);
@@ -144,7 +144,7 @@ $(function(){
 				$(this).animate({left: '-5px'},300);
 				flagvideo=0;
 			}else{
-				$("#sharevideo").animate({left: '5%',width:'34%',height:"65%"},300);
+				$("#sharevideo").animate({left: '5%',width:'34%',height:"70%"},300);
 				$(".main_area").animate({"margin-left":"-3%"},300);
 				$("#whiteboard").animate({width:'40%'},300);
 				$(this).animate({left: '0%'},300);

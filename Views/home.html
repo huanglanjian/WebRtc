@@ -63,12 +63,12 @@
                 <div class="friend-file" id="friend_file">
                     <tabset justified="true">
                         <tab heading="好友">
-                            <div class="col-md-12" style="height: 300px;">
+                            <div class="col-md-12" style="height: 70%;">
                                 <div ng-include="'/template/friend.html'"></div>
                             </div>
                         </tab>
                         <tab heading="文件">
-                            <div class="col-md-12" style="height: 300px;" ng-controller="Share_file" >
+                            <div class="col-md-12" style="height: 70%;" ng-controller="Share_file" >
                                 <label for="sharefile">公示区:</label>
                                 <button type="button" id="share-file" disabled class="btn btn-primary" style="margin-left: 25%;" ng-click="addItem()">分享文件</button>
                                 <hr/>
@@ -78,14 +78,14 @@
                         </tab>
                     </tabset>
                 </div>
-                <div id="leftvideo"><a href="javascript:;" title="好友&文件"></a></div>
+                <div id="leftvideo"><a href="javascript:;" title="视频&语音"></a></div>
                 <div class="col-md-12" id="sharevideo">
                     <label for="Video">视频区:</label>
                     <div class="video"></div>
                 </div>
             </div>
             <div class="col-md-7 main_area">
-                <div class="col-md-8" id="whiteboard" style="height: 650px;">
+                <div class="col-md-8" id="whiteboard" style="height: 83%;">
                     <img id="preview-image"  style="position: absolute; top:0; left: 15px;z-index:91;">
                     <div id="elementToShare" contenteditable style="height: 650px;width: 490px;">
                         <div style="margin-left: 25%;">
@@ -142,7 +142,7 @@
                     </div>
                 </div>
                 <div id="rightArrow"><a href="javascript:;" title="聊天"></a></div>
-                <div class="col-md-4" id="floatchat" style="height: 650px;background:#EFEFF4;">
+                <div class="col-md-4" id="floatchat" style="height: 83%;background:#EFEFF4;">
                         <div class="input">
                             <input type="text" id="input-text-chat" class="form-control" disabled placeholder="输入文字 Enter发送">
                         </div>

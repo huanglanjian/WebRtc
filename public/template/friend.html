@@ -13,12 +13,14 @@
                         {{group.content}}
                     </accordion-group>
                     <accordion-group  is-open="status.open">
-                        <accordion-heading>
+                        <accordion-heading >
                             用户好友
                         </accordion-heading>
-                        <section ng-repeat="item in items">
-                            <li>
-                                <a href="">{{item}}</a>
+                        <section ng-repeat="item in items track by $index" ng-controller="ListController">
+                            <li >
+                                <a href="#"
+                                   class="list-group-item"
+                                   context-menu="menuOptions">{{item}}</a>
                             </li>
                         </section>
                     </accordion-group>
@@ -26,5 +28,6 @@
             </section>
         </div>
     </tab>
-    <tab heading="群组">现在啥也没有</tab>
+    <tab heading="我的群">现在啥也没有</tab>
+    <tab heading="所属群">现</tab>
 </tabset>
