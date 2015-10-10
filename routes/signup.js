@@ -36,8 +36,8 @@ module.exports = function ( app ) {
                             res.send(500, req.session.error);
                             req.session.error = '用户注册失败';
                         } else if(doc) {
-                            req.session.error = '注册成功wwww';
-                            res.send(500, req.session.error);
+                            req.session.success = '注册成功';
+                            res.send(200, req.session.success);
                             console.log("注册成功了!")
                         }
                     });

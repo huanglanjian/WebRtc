@@ -34,7 +34,6 @@ myApp.directive('myDialog', function($http) {
                             method:'POST',
                             data:data,
                         }).success(function(data, status, headers, config) {
-
                             if(status == '200'){
                                 scope.visible = true;
                                 scope.info_show = data+"可登录";
